@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Pernikahan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #FBF8F4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333333;
+}
+
+textarea {
+    width: 400px;
+    height: 150px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    margin: 5px;
+    background-color: #1A2E47;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0F1D30;
+}
+
+.card {
+    width: 800px;
+    height: 500px;
+    background-color: #fff;
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.photo-section {
+    width: 50%;
+    height: 100%;
+}
+
+.photo-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.text-section {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 40px;
+    padding-top: 40px;
+    text-align: center;
+}
+
+.text-section .names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    color: #222;
+}
+
+.text-section .and-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin: 5px 0 15px;
+    letter-spacing: 3px;
+    color: #444;
+}
+
+.text-section .main-message {
+    font-size: 14px;
+    margin-bottom: 20px;
+    max-width: 90%;
+    line-height: 1.5;
+    color: #555;
+}
+
+.date-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.date-section .date-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    padding: 0 20px;
+    border-right: 1px solid #aaa;
+    color: #111;
+}
+
+.date-section .date-item:last-child {
+    border-right: none;
+}
+
+.text-section .details {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.text-section .details strong {
+    font-weight: 600;
+    color: #222;
+}
+
+.message {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    width: 600px;
+    font-size: 16px;
+    white-space: pre-wrap;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    color: #333333;
+}
+</style>
+</head>
+<body>
+
+<h2>Batch Generator Undangan & Pesan</h2>
+<p>Masukkan daftar nama tamu (satu per baris):</p>
+<textarea id="namaTamuList" placeholder="Contoh:&#10;Agung dan Istri&#10;Budi & Istri"></textarea><br>
+<button onclick="generateAllCards()">Generate Semua</button>
+
+<h3>Preview Kartu & Pesan</h3>
+<div id="cardsContainer"></div>
+<div id="messagesContainer"></div>
+
+<script>
+    const PHOTO_URL = 'foto-wedding.jpg'; // Menggunakan URL foto dummy yang bisa diakses
+
+    function generateAllCards() {
+        const container = document.getElementById('cardsContainer');
+        const msgContainer = document.getElementById('messagesContainer');
+        container.innerHTML = '';
+        msgContainer.innerHTML = '';
+
+        const names = document.getElementById('namaTamuList').value.split('\n')
+            .map(n => n.trim()).filter(n => n !== '');
+
+        if (names.length === 0) {
+            alert('Mohon masukkan minimal satu nama.');
+            return;
+        }
+
+        const promises = names.map(nama => {
+            return new Promise((resolve, reject) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="photo-section">
+                        <img src="${PHOTO_URL}" alt="Foto Pernikahan">
+                    </div>
+                    <div class="text-section">
+                        <p class="wedding-title">The Wedding of</p>
+                        <p class="names">ADE</p>
+                        <p class="and-text">AND</p>
+                        <p class="names">ARIJAL</p>
+                        <p class="main-message">
+                            Kami mengundang Anda untuk bergabung dengan kami dalam perayaan pernikahan kami
+                        </p>
+                        <p class="details">Kepada:<br><strong>${nama}</strong></p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+
+                const msg = document.createElement('div');
+                msg.className = 'message';
+                msg.innerText = `Assalamu’alaikum Wr. Wb.
+Bismillahirrahmanirrahim
+
+Maha Suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan.
+Dengan penuh rasa syukur, izinkan kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam pernikahan kami:
+
+Ade Annisa Ramadhayanti
+&
+Muhamad Arijal
+
+https://undangandigitallku.my.id/ade-arijal/?to=${encodeURIComponent(nama)}
+
+Merupakan suatu kehormatan dan kebahagiaan besar bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu pada hari bahagia kami.
+
+Atas kehadiran dan doa restunya, kami ucapkan terima kasih.
+Wassalamu’alaikum Wr. Wb.
+
+Hormat kami,
+Ade & Arijal`;
+                msgContainer.appendChild(msg);
+
+                // Tambahkan penundaan untuk memastikan gambar ter-load
+                setTimeout(() => {
+                    html2canvas(card, {
+                        allowTaint: true,
+                        useCORS: true
+                    }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = 'undangan_' + nama + '.png';
+                        link.href = canvas.toDataURL();
+                        link.click();
+                        resolve();
+                    }).catch(error => {
+                        console.error('Error saat membuat gambar undangan:', error);
+                        reject(error);
+                    });
+                }, 500); // Penundaan 500ms
+            });
+        });
+
+        Promise.all(promises)
+            .then(() => console.log('Semua undangan berhasil diunduh.'))
+            .catch(error => console.error('Gagal mengunduh beberapa undangan.', error));
+    }
+</script>
+
+</body>
+</html>
